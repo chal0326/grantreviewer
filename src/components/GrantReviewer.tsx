@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { reviewGrantApplication, implementSuggestions } from '../lib/ai-client';
 import { parseAIResponse } from '../lib/response-parser';
+import { useSupabase } from '../lib/supabase-context';
 import Header from './Header';
 import Editor from './Editor';
 import ErrorMessage from './ErrorMessage';
@@ -18,6 +19,7 @@ interface FeedbackState {
 }
 
 export default function GrantReviewer() {
+  const supabase = useSupabase();
   const [feedback, setFeedback] = useState<FeedbackState>({
     original: '',
     feedback: '',
@@ -36,7 +38,7 @@ export default function GrantReviewer() {
     }));
     
     try {
-      const aiResponse = await reviewGrantApplication(feedback.original);
+      const aiResponse = await reviewGrantApplication(feedback.original, supabase);
       const { feedback: feedbackText, rewrite } = parseAIResponse(aiResponse);
       
       setFeedback(prev => ({
@@ -63,7 +65,7 @@ export default function GrantReviewer() {
     }));
 
     try {
-      const aiResponse = await implementSuggestions(feedback.original, feedback.feedback);
+      const aiResponse = await implementSuggestions(feedback.original, feedback.feedback, supabase);
       const { feedback: implementationFeedback, rewrite: finalVersion } = parseAIResponse(aiResponse);
 
       setFeedback(prev => ({

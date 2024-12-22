@@ -1,5 +1,5 @@
-import React from 'react';
-import { Check, X } from 'lucide-react';
+import { Check } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface DiffViewerProps {
   original: string;
@@ -18,7 +18,9 @@ export default function DiffViewer({ original, feedback, rewrite, onAcceptRewrit
         <div className="space-y-3">
           {feedbackPoints.map((point, index) => (
             <div key={index} className="p-3 bg-blue-50 rounded-lg">
-              <p className="text-blue-800">{point}</p>
+              <div className="text-blue-800 prose prose-blue max-w-none">
+                <ReactMarkdown>{point}</ReactMarkdown>
+              </div>
             </div>
           ))}
         </div>
@@ -36,7 +38,9 @@ export default function DiffViewer({ original, feedback, rewrite, onAcceptRewrit
           </button>
         </div>
         <div className="p-4 bg-green-50 rounded-lg">
-          <pre className="whitespace-pre-wrap text-green-800 font-sans">{rewrite}</pre>
+          <div className="prose prose-green max-w-none">
+            <ReactMarkdown>{rewrite}</ReactMarkdown>
+          </div>
         </div>
       </div>
     </div>
